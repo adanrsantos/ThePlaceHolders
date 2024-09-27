@@ -1,21 +1,36 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
-	"os"
+	"regexp"
+	"strings"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 const SESSION_COOKIE_NAME = "utsa-place-session"
 const SESSION_AUTH = "auth"
 
+const ENCRYPTION_STRENGTH = 14
+
 type UserData struct {
-	Email          string    `json:"email"`
-	Password       string    `json:"password"`
-	AccountCreated time.Time `json:"account-created"`
-	LastLogin      time.Time `json:"last-login"`
+	Email          string
+	Password       string
+	AccountCreated time.Time
+	LastLogin      time.Time
+}
+
+func validate_email(email string) (string, bool) {
+	email = strings.ToLower(email)
+	regex := regexp.MustCompile("^[a-z]+.[a-z]+@(my.)?utsa.edu")
+	ok := regex.MatchString(email)
+	return email, ok
+}
+
+func hash_password(password string) string {
+	bytes, _ := bcrypt.GenerateFromPassword([]byte(password), ENCRYPTION_STRENGTH)
+	return string(bytes)
 }
 
 // Handles requests to /login.html
@@ -65,13 +80,19 @@ func (s *Server) handle_register(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "./static/register.html")
 	case http.MethodPost:
 		// Get data from form
-		email := r.FormValue("email")
+		email, ok := validate_email(r.FormValue("email"))
+		if !ok {
+			http.Error(w, "Invalid email address", http.StatusForbidden)
+			return
+		}
 		password := r.FormValue("password")
-		fmt.Println(r.Form)
+		if len(password) < 5 || len(password) >= 70 {
+			http.Error(w, "Invalid password length", http.StatusForbidden)
+			return
+		}
 		// Check that this email is not already registered
 		if _, ok := s.Users[email]; ok {
-			fmt.Println("Already registered")
-			http.Error(w, "Forbidden", http.StatusForbidden)
+			http.Error(w, "Already registered", http.StatusForbidden)
 			return
 		}
 		// Generate session
@@ -94,7 +115,6 @@ func (s *Server) handle_register(w http.ResponseWriter, r *http.Request) {
 		// Send session token to browser
 		session.Save(r, w)
 		// Redirect to index.html
-		s.save_state()
 		http.Redirect(w, r, "/", http.StatusFound)
 	default:
 		http.Error(w, "Forbidden", http.StatusForbidden)
@@ -113,13 +133,4 @@ func (s *Server) handle_logout(w http.ResponseWriter, r *http.Request) {
 		Name:   SESSION_COOKIE_NAME,
 		MaxAge: -1,
 	})
-}
-
-func (s *Server) save_state() {
-	file, err := os.Create("db.json")
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-	json.NewEncoder(file).Encode(s.Users)
 }

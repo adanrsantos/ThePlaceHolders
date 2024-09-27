@@ -7,6 +7,10 @@ within a restricted amount of time to make art.
 2. Run the command `go run .` inside this folder
 3. View the website at [127.0.0.1:8080](http://127.0.0.1:8080/)
 
+## Go project structure
+* [go.mod](go.mod) Go version and library dependencies
+* [go.sum](go.sum) Checksums for libraries
+
 ## Backend Source
 Our back-end is written in [Go](https://go.dev/) using the standard library.
 * [Request handling](server.go)
