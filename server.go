@@ -12,7 +12,9 @@ const ADDRESS = "127.0.0.1"
 const PORT = "8080"
 
 type Server struct {
-	Users    map[string]UserData
+	// Registered user information
+	Users map[string]UserData
+	// Login sessions
 	Sessions *sessions.CookieStore
 }
 
@@ -38,10 +40,10 @@ func main() {
 	})
 	// Start web server at 127.0.0.1:8080
 	fmt.Printf("Listening to %s on port %s...\n", ADDRESS, PORT)
-	e := http.ListenAndServe(ADDRESS+":"+PORT, nil)
+	err := http.ListenAndServe(ADDRESS+":"+PORT, nil)
 	// Print any errors
-	if e != nil {
+	if err != nil {
 		fmt.Println("Error starting server:")
-		log.Fatal(e)
+		log.Fatal(err)
 	}
 }
