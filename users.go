@@ -72,7 +72,7 @@ func (s *Server) handle_login(w http.ResponseWriter, r *http.Request) {
 		}
 		now := time.Now()
 		session.Values[SESSION_AUTH] = true
-		session.Values[SESSION_STARTED] = now
+		session.Values[SESSION_STARTED] = now.String()
 		session.Save(r, w)
 		// Update last-login on DB
 		user.LastLogin = now
@@ -125,7 +125,7 @@ func (s *Server) handle_register(w http.ResponseWriter, r *http.Request) {
 		}
 		// Make session valid
 		session.Values[SESSION_AUTH] = true
-		session.Values[SESSION_STARTED] = now
+		session.Values[SESSION_STARTED] = now.String()
 		// Send session token to browser
 		session.Save(r, w)
 		// Redirect to index.html
@@ -134,6 +134,19 @@ func (s *Server) handle_register(w http.ResponseWriter, r *http.Request) {
 	default:
 		http.Error(w, "Forbidden", http.StatusForbidden)
 	}
+}
+
+func (s *Server) secret(w http.ResponseWriter, r *http.Request) {
+	session, _ := s.Sessions.Get(r, SESSION_COOKIE_NAME)
+
+	// Check if user is authenticated
+	if auth, ok := session.Values[SESSION_AUTH].(bool); !ok || !auth {
+		http.Error(w, "Not logged in", http.StatusForbidden)
+		return
+	}
+
+	// Print secret message
+	fmt.Fprintln(w, "Successfully logged in!")
 }
 
 func (s *Server) handle_logout(w http.ResponseWriter, r *http.Request) {

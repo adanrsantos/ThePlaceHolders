@@ -38,6 +38,7 @@ func main() {
 		server.handle_logout(w, r)
 		http.Redirect(w, r, "/", http.StatusFound)
 	})
+	http.HandleFunc("/secret", server.secret)
 	// Start web server at 127.0.0.1:8080
 	fmt.Printf("Listening to %s on port %s...\n", ADDRESS, PORT)
 	err := http.ListenAndServe(ADDRESS+":"+PORT, nil)
