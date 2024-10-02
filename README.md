@@ -22,3 +22,4 @@ CSS framework.
 * [Main page](static/index.html)
 * [Login page](static/login.html)
 * [Registration page](static/register.html)
+hello
