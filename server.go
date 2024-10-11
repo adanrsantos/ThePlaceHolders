@@ -1,15 +1,13 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/sessions"
 )
-
-const ADDRESS = "127.0.0.1"
-const PORT = "8080"
 
 type Server struct {
 	// Registered user information
@@ -19,6 +17,11 @@ type Server struct {
 }
 
 func main() {
+	ipFlag := flag.String("ip", "127.0.0.1", "IP address to receive traffic from")
+	portFlag := flag.String("port", "8080", "Port to receive traffic from")
+	flag.Parse()
+	address := *ipFlag
+	port := *portFlag
 	// Create server object
 	secret := []byte("super-secret-key")
 	server := Server{
@@ -40,8 +43,8 @@ func main() {
 	})
 	http.HandleFunc("/secret", server.secret)
 	// Start web server at 127.0.0.1:8080
-	fmt.Printf("Listening to %s on port %s...\n", ADDRESS, PORT)
-	err := http.ListenAndServe(ADDRESS+":"+PORT, nil)
+	fmt.Printf("Listening to %s on port %s...\n", address, port)
+	err := http.ListenAndServe(address+":"+port, nil)
 	// Print any errors
 	if err != nil {
 		fmt.Println("Error starting server:")
