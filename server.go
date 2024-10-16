@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -9,14 +10,29 @@ import (
 	"github.com/gorilla/sessions"
 )
 
+const CANVAS_WIDTH = 1000
+const CANVAS_HEIGHT = 1000
+
+type Canvas struct {
+	Data   [CANVAS_WIDTH * CANVAS_HEIGHT]byte `json:"data"`
+	Width  int                                `json:"width"`
+	Height int                                `json:"height"`
+}
+
 type Server struct {
 	// Registered user information
 	Users map[string]UserData
 	// Login sessions
 	Sessions *sessions.CookieStore
+	Canvas   Canvas
+}
+
+func (s *Server) canvas(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode(s.canvas)
 }
 
 func main() {
+	// Grab command line arguments
 	ipFlag := flag.String("ip", "127.0.0.1", "IP address to receive traffic from")
 	portFlag := flag.String("port", "8080", "Port to receive traffic from")
 	flag.Parse()
@@ -27,7 +43,15 @@ func main() {
 	server := Server{
 		Users:    make(map[string]UserData),
 		Sessions: sessions.NewCookieStore(secret),
+		Canvas:   Canvas{},
 	}
+
+	for x := 0; x < CANVAS_WIDTH; x++ {
+		for y := 0; y < CANVAS_HEIGHT; y++ {
+			server.Canvas.Data[y*CANVAS_HEIGHT+x] = byte(CANVAS_WIDTH / x)
+		}
+	}
+
 	// Host static files
 	static_files := http.FileServer(http.Dir("static/"))
 	http.Handle("/", static_files)
@@ -42,6 +66,7 @@ func main() {
 		http.Redirect(w, r, "/", http.StatusFound)
 	})
 	http.HandleFunc("/secret", server.secret)
+	http.HandleFunc("/canvas", canvas)
 	// Start web server at 127.0.0.1:8080
 	fmt.Printf("Listening to %s on port %s...\n", address, port)
 	err := http.ListenAndServe(address+":"+port, nil)
