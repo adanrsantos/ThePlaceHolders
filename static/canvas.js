@@ -1,23 +1,67 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = 500;
-canvas.height = 500;
+const canvasSize = 500;
 const dataSize = 1000;
+canvas.width = canvasSize;
+canvas.height = canvasSize;
 
-let x;
-let y;
-let pixelSize = canvas.width / dataSize;
+class Point {
+    // new Point(x, y)
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+    // Convert canvas position to data position
+    canvasToData() {
+        return new Point(
+            Math.round(this.x / canvasSize * dataSize),
+            Math.round(this.y / canvasSize * dataSize)
+        );
+    }
+    // Convert data position to canvas position
+    dataToCanvas() {
+        return new Point(
+            this.x / dataSize * canvasSize,
+            this.y / dataSize * canvasSize
+        );
+    }
+    // Convert to array index
+    index() {
+        return this.y * dataSize + this.x;
+    }
+    // Basic math functions
+    plus(otherPoint) {
+        return new Point(
+            this.x + otherPoint.x,
+            this.y + otherPoint.y
+        );
+    }
+    minus(otherPoint) {
+        return new Point(
+            this.x - otherPoint.x,
+            this.y - otherPoint.y
+        );
+    }
+    scaleBy(number) {
+        return new Point(
+            this.x * number,
+            this.y * number
+        );
+    }
+}
+
+let pixelSize = canvasSize / dataSize;
 const centerPixel = pixelSize / 2;
 
-function draw() {
+function draw(x, y) {
     ctx.fillRect(x, y, pixelSize, pixelSize);
 }
 
 canvas.addEventListener("mousedown", (e) => {
-    x = e.clientX - canvas.getBoundingClientRect().left - centerPixel;
-    y = e.clientY - canvas.getBoundingClientRect().top - centerPixel;
-    draw();
+    let x = e.clientX - canvas.getBoundingClientRect().left - centerPixel;
+    let y = e.clientY - canvas.getBoundingClientRect().top - centerPixel;
+    draw(x, y);
 })
 
 //const toolbar = document.getElementById("toolbar");
