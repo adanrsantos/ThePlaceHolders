@@ -20,6 +20,7 @@ type Server struct {
 }
 
 func main() {
+	Send("test body")
 	// Grab command line arguments
 	ipFlag := flag.String("ip", "127.0.0.1", "IP address to receive traffic from")
 	portFlag := flag.String("port", "8080", "Port to receive traffic from")
