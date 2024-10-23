@@ -13,6 +13,7 @@ import (
 const SESSION_COOKIE_NAME = "utsa-place-session"
 const SESSION_AUTH = "auth"
 const SESSION_STARTED = "age"
+const SESSION_CONFIRMED = "confirmed"
 
 const ENCRYPTION_STRENGTH = 14
 
@@ -126,14 +127,27 @@ func (s *Server) handle_register(w http.ResponseWriter, r *http.Request) {
 		// Make session valid
 		session.Values[SESSION_AUTH] = true
 		session.Values[SESSION_STARTED] = now.String()
+		session.Values[SESSION_CONFIRMED] = false
 		// Send session token to browser
 		session.Save(r, w)
 		// Redirect to index.html
 		fmt.Println("Registered user: ", email)
-		http.Redirect(w, r, "/", http.StatusFound)
+		http.Redirect(w, r, "/confirm-email", http.StatusFound)
 	default:
 		http.Error(w, "Forbidden", http.StatusForbidden)
 	}
+}
+
+func (s *Server) handle_confirmation(w http.ResponseWriter, r *http.Request) {
+	session, err := s.Sessions.Get(r, SESSION_COOKIE_NAME)
+	if err != nil {
+		s.handle_logout(w, r)
+		http.Redirect(w, r, "/register", http.StatusFound)
+		return
+	}
+	confirmed := session.Values[SESSION_CONFIRMED]
+	fmt.Println("Session confirmed: ", confirmed)
+	http.ServeFile(w, r, "./static/confirmation.html")
 }
 
 func (s *Server) secret(w http.ResponseWriter, r *http.Request) {
