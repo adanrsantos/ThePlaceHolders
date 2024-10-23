@@ -45,15 +45,15 @@ class Point {
     // Convert canvas position to data position
     canvasToData() {
         return new Point(
-            Math.round(this.x / canvasSize * dataSize),
-            Math.round(this.y / canvasSize * dataSize)
+            Math.round(this.x / canvasSize * gridCount),
+            Math.round(this.y / canvasSize * gridCount)
         );
     }
     // Convert data position to canvas position
     dataToCanvas() {
         return new Point(
-            this.x / dataSize * canvasSize,
-            this.y / dataSize * canvasSize
+            this.x / gridCount * canvasSize,
+            this.y / gridCount * canvasSize
         );
     }
     // Convert to array index
@@ -82,6 +82,7 @@ class Point {
 }
 
 function draw(point) {
+    point = point.canvasToData().dataToCanvas()
     ctx.fillRect(point.x, point.y, pixelSize, pixelSize);
 }
 
