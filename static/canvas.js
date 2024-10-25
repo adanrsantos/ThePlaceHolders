@@ -3,21 +3,27 @@ const ctx = canvas.getContext("2d");
 
 const canvasSize = 500;
 const dataSize = 1000;
-const gridCount = 10    ;
+const gridCount = 10;
+let zoom = 1.0;
+const centerPixel = getPixelSize() / 2;
+
+function getPixelSize() {
+    return canvasSize / gridCount * zoom;
+}
+
 canvas.width = canvasSize;
 canvas.height = canvasSize;
 
-//let pixelSize = canvasSize / dataSize;
-let pixelSize = canvasSize / gridCount;
-const centerPixel = pixelSize / 2;
-
 function drawGrid() {
+    if (getPixelSize() < 5) {
+        return;
+    }
     ctx.strokeStyle = '#000'; // Set grid line color
     ctx.lineWidth = 1; // Set grid line width
 
     // Draw horizontal lines
     for (let i = 0; i <= gridCount; i++) {
-        let y = i * pixelSize;
+        let y = i * getPixelSize();
         ctx.beginPath();
         ctx.moveTo(0, y); // Start the line at the left edge (x = 0)
         ctx.lineTo(canvasSize, y); // Draw to the right edge (x = canvasSize)
@@ -26,7 +32,7 @@ function drawGrid() {
 
     // Draw vertical lines
     for (let i = 0; i <= gridCount; i++) {
-        let x = i * pixelSize;
+        let x = i * getPixelSize();
         ctx.beginPath();
         ctx.moveTo(x, 0); // Start the line at the top edge (y = 0)
         ctx.lineTo(x, canvasSize); // Draw to the bottom edge (y = canvasSize)
@@ -83,7 +89,7 @@ class Point {
 
 function draw(point) {
     point = point.canvasToData().dataToCanvas()
-    ctx.fillRect(point.x, point.y, pixelSize, pixelSize);
+    ctx.fillRect(point.x, point.y, getPixelSize(), getPixelSize());
 }
 
 canvas.addEventListener("mousedown", (e) => {
