@@ -129,6 +129,7 @@ func (s *Server) handle_register(w http.ResponseWriter, r *http.Request) {
 		session.Values[SESSION_AUTH] = true
 		session.Values[SESSION_STARTED] = now.String()
 		session.Values[SESSION_CONFIRMED] = false
+		session.Values[SESSION_CONFIRM_KEY] = "asdf"
 		// Send session token to browser
 		session.Save(r, w)
 		// Redirect to index.html
@@ -140,18 +141,23 @@ func (s *Server) handle_register(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handle_confirmation(w http.ResponseWriter, r *http.Request) {
+	session, err := s.Sessions.Get(r, SESSION_COOKIE_NAME)
+	if err != nil {
+		s.handle_logout(w, r)
+		http.Redirect(w, r, "/register", http.StatusFound)
+		return
+	}
 	switch r.Method {
 	case http.MethodGet:
-		session, err := s.Sessions.Get(r, SESSION_COOKIE_NAME)
-		if err != nil {
-			s.handle_logout(w, r)
-			http.Redirect(w, r, "/register", http.StatusFound)
-			return
+		confirmed := session.Values[SESSION_CONFIRMED].(bool)
+		fmt.Println("User email confirmed: ", confirmed)
+		if confirmed {
+			http.Redirect(w, r, "/", http.StatusFound)
+		} else {
+			http.ServeFile(w, r, "./static/confirmation.html")
 		}
-		confirmed := session.Values[SESSION_CONFIRMED]
-		fmt.Println("Session confirmed: ", confirmed)
-		http.ServeFile(w, r, "./static/confirmation.html")
 	case http.MethodPost:
+		code := r.FormValue("code")
 	default:
 	}
 }
