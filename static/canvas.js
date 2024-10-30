@@ -4,14 +4,14 @@ const ctx = canvas.getContext("2d");
 const canvasSize = 500;
 let zoom = 1.0;
 let baseGridCount = 500; // Base grid count at zoom = 1
-let gridCount = baseGridCount;
+let gridCount = 500;
 let pixelSize = canvasSize / gridCount;
 
 canvas.width = canvasSize;
 canvas.height = canvasSize;
 
 function updateGridCount() {
-    return Math.floor(baseGridCount / zoom); // Adjust grid count based on zoom
+    return Math.floor(gridCount / 2); // Adjust grid count based on zoom
 }
 
 function updatePixelSize() {
@@ -92,6 +92,7 @@ function draw(point, color) {
     ctx.fillRect(point.x, point.y, pixelSize, pixelSize);
 }
 
+/*
 canvas.addEventListener("mousedown", (e) => {
     let x = e.clientX - canvas.getBoundingClientRect().left - (pixelSize / 2);
     let y = e.clientY - canvas.getBoundingClientRect().top - (pixelSize / 2);
@@ -99,7 +100,77 @@ canvas.addEventListener("mousedown", (e) => {
     let point = new Point(x, y);
     draw(point, color);
 });
+*/
 
+canvas.addEventListener("mousedown", (e) => {
+    let x = e.clientX - canvas.getBoundingClientRect().left - (pixelSize / 2);
+    let y = e.clientY - canvas.getBoundingClientRect().top - (pixelSize / 2);
+    if (x > 249){
+        if (y < 250){
+            console.log("Quadrant 1");
+            console.log("Previous Grid Size:", gridCount);
+            console.log("Previous PixelSize:", pixelSize);
+            gridCount = updateGridCount();
+            pixelSize = updatePixelSize();
+            console.log("Updated Grid Size:", gridCount);
+            console.log("Updated PixelSize:", pixelSize);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawStoredPixels(1);
+        }
+        else{
+            console.log("Quadrant 4");
+        }
+    }
+    else{
+        if (y < 250){
+            console.log("Quadrant 2");
+        }
+        else{
+            console.log("Quadrant 3");
+        }
+    }
+    console.log("This is where the user clicked to zoom:", x);
+    console.log("This is where the user clicked to zoom:", y);
+});
+
+const pixelData = {};
+
+function storePixel(x, y, color){
+    pixelData[`${x},${y}`] = color;
+}
+
+for (let i = 0; i < 500; i++){
+    storePixel(i, 250, '#0000FF');
+    storePixel(i, i, '#FF0000');
+    storePixel(i, 499 - i, '#FFFF00');
+    storePixel(250, i, '#FF6600')
+}
+
+function drawStoredPixels(quadrant) {
+    if (quadrant == 1){
+        for (const [key, color] of Object.entries(pixelData)) {
+            const [x, y] = key.split(',').map(Number);
+            if (x >= 250 && x <= 499 && y >= 0 && y <= 249) {
+                const pixelCanvasPos = new Point(x, y);
+                ctx.fillStyle = color;
+                console.log(pixelCanvasPos);
+                draw(pixelCanvasPos, color);
+            }
+        }
+    }
+    else{
+        for (const [key, color] of Object.entries(pixelData)) {
+            const [x, y] = key.split(',').map(Number);
+            const pixelCanvasPos = new Point(x, y);
+            ctx.fillStyle = color;
+            draw(pixelCanvasPos, color);
+        }
+    }
+}
+
+drawStoredPixels();
+
+/*
 document.getElementById("zoomIn").addEventListener("click", () => {
     if (zoom < 100.0) {
         if (zoom == 1.0){
@@ -117,6 +188,7 @@ document.getElementById("zoomIn").addEventListener("click", () => {
     drawGrid(); // Redraw the grid with updated zoom
 });
 
+/*
 document.getElementById("zoomOut").addEventListener("click", () => {
     if (zoom > 1.0) {
         if (zoom <= 4.0){
@@ -133,3 +205,4 @@ document.getElementById("zoomOut").addEventListener("click", () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawGrid(); // Redraw the grid with updated zoom
 });
+*/
