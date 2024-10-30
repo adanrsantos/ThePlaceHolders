@@ -157,7 +157,6 @@ func (s *Server) handle_confirmation(w http.ResponseWriter, r *http.Request) {
 			http.ServeFile(w, r, "./static/confirmation.html")
 		}
 	case http.MethodPost:
-		code := r.FormValue("code")
 	default:
 	}
 }
