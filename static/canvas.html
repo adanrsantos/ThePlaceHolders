@@ -19,15 +19,14 @@
         <canvas id="canvas" width="500" height="500" style="border:1px solid #000000;" alt="canvas"></canvas>
         <div id="toolbar" class="toolbar">
           <div class="toolbarItems">
+            <button id="zoomOut">-</button>
+          </div>
+          <div class="toolbarItems">
             <label for="stroke">Strokes</label>
             <input id="stroke" name="stroke" type="color" class="strokePicker">
           </div>
           <div class="toolbarItems">
-            <label for="lineWidth">Line Width</label>
-            <input id="lineWidth" name="lineWidth" type="number" value="5" min="1" max="10">
-          </div>
-          <div class="toolbarItems">
-            <button id="clear">Clear</button>
+            <button onclick="zoomIn"id="zoomIn">+</button>
           </div>
         </div>
       </div>  
