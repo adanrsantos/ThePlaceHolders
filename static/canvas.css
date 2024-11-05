@@ -66,4 +66,5 @@ html, body {
 canvas {
     background-color: lightblue;
     margin: 20px;
+    image-rendering: pixelated;
 }
