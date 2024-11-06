@@ -7,6 +7,9 @@ within a restricted amount of time to make art.
 2. Run the command `go run .` inside this folder
 3. View the website at [127.0.0.1:8080](http://127.0.0.1:8080/)
 
+You can choose a different IP address or port using the flags:
+`go run . -ip=192.168.0.1 -port=3000`
+
 ## Go project structure
 * [go.mod](go.mod) Go version and library dependencies
 * [go.sum](go.sum) Checksums for libraries

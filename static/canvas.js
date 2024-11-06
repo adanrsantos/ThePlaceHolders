@@ -1,0 +1,107 @@
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+const CANVAS_SIZE = 500;
+const DATA_SIZE = 200;
+let scale = 1;
+let offx = 0;
+let offy = 0;
+
+let clickx = 0;
+let clicky = 0;
+
+let mouseClicked = false;
+// Array of [red, blue, green, transparency] * width * height
+let image = new ImageData(DATA_SIZE, DATA_SIZE);
+// Drawable image
+let bitmap = null;
+
+window.addEventListener("load", async (e) => {
+    // Create drawable image, update it every half second
+    await redraw();
+    setInterval(redraw, 500);
+    setInterval(draw, 500);
+});
+
+
+async function redraw() {
+    bitmap = await createImageBitmap(image);
+}
+
+// Color is an array of four numbers 0-255 (RGB + transparency)
+function setPixel(data, x, y, color) {
+    let start = (y * DATA_SIZE + x) * 4;
+    for (let i = 0; i < 4; i++) {
+        data[start + i] = color[i];
+    }
+}
+
+function draw() {
+    ctx.fillStyle = "rgb(0 0 0 255)";
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let drawScale = CANVAS_SIZE / DATA_SIZE * scale;
+    ctx.imageSmoothingEnabled = false;
+    ctx.scale(drawScale, drawScale);
+    ctx.drawImage(bitmap, offx, offy);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+}
+
+canvas.addEventListener("wheel", async (e) => {
+    let oldScale = scale;
+    if (e.deltaY < 0) {
+        scale += 0.1;
+    } else if (e.deltaY > 0) {
+        scale -= 0.1;
+    }
+    /*
+    offX += (DATA_SIZE * scale - DATA_SIZE * oldScale) / 2;
+    offY += (DATA_SIZE * scale - DATA_SIZE * oldScale) / 2;
+    */
+    draw(image);
+});
+
+canvas.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+})
+
+canvas.addEventListener("mousedown", async (e) => {
+    // Left click
+    if (e.button == 0) {
+        mouseClicked = true;
+        setTimeout(() => {
+            mouseClicked = false;
+        }, 200);
+    }
+});
+
+canvas.addEventListener("mouseup", async (e) => {
+    if (e.button == 0 && mouseClicked) {
+        mouseClicked = false;
+
+        clickx = e.clientX;
+        clicky = e.clientY;
+
+        let x = e.clientX - canvas.getBoundingClientRect().left;
+        let y = e.clientY - canvas.getBoundingClientRect().top;
+
+        let cx = Math.round(x / (CANVAS_SIZE * scale) * DATA_SIZE - offx);
+        let cy = Math.round(y / (CANVAS_SIZE * scale) * DATA_SIZE - offy);
+        
+        console.log(cx, cy);
+        if (cx < 0 || cx > CANVAS_SIZE || cy < 0 || cy > CANVAS_SIZE) {
+            return;
+        }
+        setPixel(image.data, cx, cy, [255, 0, 0, 255]);
+        await redraw();
+        draw();
+    }
+});
+
+canvas.addEventListener("mousemove", async (e) => {
+    // `buttons` is a bitflag for some dumb reason
+    if (e.buttons & 1) {
+        offx += e.movementX * (1.0 / scale) * 0.45;
+        offy += e.movementY * (1.0 / scale) * 0.45;
+        draw(image);
+    } 
+});

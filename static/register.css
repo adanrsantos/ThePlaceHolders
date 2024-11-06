@@ -1,0 +1,47 @@
+:root {
+    --utsa-orange: #f15a22;
+    --utsa-blue: #0c2340;
+}
+
+html {
+    background-color: var(--utsa-orange);
+}
+
+#rform {
+    border-radius: 10px;
+    border: solid var(--utsa-orange) 2px;
+    margin: 100px;
+    padding: 30px;
+    background-color: white;
+}
+
+#formbg {
+    background-color: var(--utsa-orange);
+}
+
+#h3bg {
+    background-color: var(--utsa-blue);
+}
+
+h3 {
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px;
+    background-color: var(--utsa-blue);
+    color: var(--utsa-orange);
+    font-size: 40px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.form-label {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.form-control {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.form-text {
+    padding: 3px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}

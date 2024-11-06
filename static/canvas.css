@@ -1,0 +1,70 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html, body {
+    height: 100%;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbarCont {
+    background-color: grey;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.canvasCont {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: yellow;
+    border: solid black;
+    border-radius: 20px;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: solid black 1px;
+    width: 100%;
+    height: 60px;
+    z-index: 10;
+}
+
+.toolbarItems {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-weight: 900;
+    color: blue;
+    text-align: center;
+    height: 100%;
+    width: 100px;
+}
+
+.strokePicker {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.strokePicker:hover {
+    cursor: pointer;
+}
+
+
+canvas {
+    background-color: lightblue;
+    margin: 20px;
+    image-rendering: pixelated;
+}
