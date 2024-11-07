@@ -17,6 +17,9 @@ let image = new ImageData(DATA_SIZE, DATA_SIZE);
 let bitmap = null;
 
 window.addEventListener("load", async (e) => {
+    for (let x = 0; x < DATA_SIZE * DATA_SIZE * 4; x++) {
+        image.data[x] = 255;
+    }
     // Create drawable image, update it every half second
     await redraw();
     setInterval(redraw, 500);
@@ -46,17 +49,28 @@ function draw() {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
 
+function mousePosition(e) {
+    let x = e.clientX - canvas.getBoundingClientRect().left;
+    let y = e.clientY - canvas.getBoundingClientRect().top;
+    let cx = Math.round(x / (CANVAS_SIZE * scale) * DATA_SIZE - offx - 0.5);
+    let cy = Math.round(y / (CANVAS_SIZE * scale) * DATA_SIZE - offy - 0.5);
+    return {x: cx, y: cy};
+}
+
 canvas.addEventListener("wheel", async (e) => {
+    let mouse = mousePosition(e);
+    console.log(mouse);
     let oldScale = scale;
     if (e.deltaY < 0) {
         scale += 0.1;
     } else if (e.deltaY > 0) {
         scale -= 0.1;
     }
-    /*
-    offX += (DATA_SIZE * scale - DATA_SIZE * oldScale) / 2;
-    offY += (DATA_SIZE * scale - DATA_SIZE * oldScale) / 2;
-    */
+    let diff = (CANVAS_SIZE / oldScale) - (CANVAS_SIZE / scale);
+    let ratiox = (mouse.x - (CANVAS_SIZE / 2)) / CANVAS_SIZE;
+    let ratioy = (mouse.y - (CANVAS_SIZE / 2)) / CANVAS_SIZE;
+    offx += diff * ratiox;
+    offy += diff * ratioy;
     draw(image);
 });
 
@@ -77,17 +91,12 @@ canvas.addEventListener("mousedown", async (e) => {
 canvas.addEventListener("mouseup", async (e) => {
     if (e.button == 0 && mouseClicked) {
         mouseClicked = false;
-
         clickx = e.clientX;
         clicky = e.clientY;
-
-        let x = e.clientX - canvas.getBoundingClientRect().left;
-        let y = e.clientY - canvas.getBoundingClientRect().top;
-
-        let cx = Math.round(x / (CANVAS_SIZE * scale) * DATA_SIZE - offx);
-        let cy = Math.round(y / (CANVAS_SIZE * scale) * DATA_SIZE - offy);
+        let mouse = mousePosition(e);
+        let cx = mouse.x;
+        let cy = mouse.y;
         
-        console.log(cx, cy);
         if (cx < 0 || cx > CANVAS_SIZE || cy < 0 || cy > CANVAS_SIZE) {
             return;
         }

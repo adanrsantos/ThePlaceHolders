@@ -11,10 +11,9 @@ import (
 )
 
 const SESSION_COOKIE_NAME = "utsa-place-session"
+const SESSION_EMAIL = "email"
 const SESSION_AUTH = "auth"
 const SESSION_STARTED = "age"
-const SESSION_CONFIRMED = "confirmed"
-const SESSION_CONFIRM_KEY = "confirm-key"
 
 const ENCRYPTION_STRENGTH = 14
 
@@ -23,11 +22,13 @@ type UserData struct {
 	Password       string
 	AccountCreated time.Time
 	LastLogin      time.Time
+	EmailCode      string
+	Verified       bool
 }
 
 func validate_email(email string) (string, bool) {
 	email = strings.ToLower(email)
-	regex := regexp.MustCompile("^[a-z]+.[a-z]+@(my.)?utsa.edu")
+	regex := regexp.MustCompile("^[a-z0-9]+.[a-z0-9]+@(my.)?utsa.edu")
 	ok := regex.MatchString(email)
 	return email, ok
 }
@@ -51,7 +52,7 @@ func (s *Server) handle_login(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "./static/login.html")
 	case http.MethodPost:
 		// Get data from form
-		email := r.FormValue("email")
+		email := strings.ToLower(r.FormValue("email"))
 		password := r.FormValue("password")
 		// Get user from database
 		user, ok := s.Users[email]
@@ -75,9 +76,15 @@ func (s *Server) handle_login(w http.ResponseWriter, r *http.Request) {
 		now := time.Now()
 		session.Values[SESSION_AUTH] = true
 		session.Values[SESSION_STARTED] = now.String()
+		session.Values[SESSION_EMAIL] = user.Email
 		session.Save(r, w)
 		// Update last-login on DB
 		user.LastLogin = now
+		// If email not verified, go to verified page
+		if user.Verified {
+			s.handle_confirmation(w, r)
+			return
+		}
 		s.Users[email] = user
 		// Redirect to index.html
 		fmt.Println("Logged in user: ", email)
@@ -124,12 +131,13 @@ func (s *Server) handle_register(w http.ResponseWriter, r *http.Request) {
 			Password:       hash_password(password),
 			AccountCreated: now,
 			LastLogin:      now,
+			EmailCode:      "123456",
+			Verified:       false,
 		}
 		// Make session valid
 		session.Values[SESSION_AUTH] = true
 		session.Values[SESSION_STARTED] = now.String()
-		session.Values[SESSION_CONFIRMED] = false
-		session.Values[SESSION_CONFIRM_KEY] = "asdf"
+		session.Values[SESSION_EMAIL] = email
 		// Send session token to browser
 		session.Save(r, w)
 		// Redirect to index.html
@@ -147,17 +155,26 @@ func (s *Server) handle_confirmation(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/register", http.StatusFound)
 		return
 	}
+	email := session.Values[SESSION_EMAIL].(string)
+	user, ok := s.Users[email]
+	if !ok {
+		return
+	}
 	switch r.Method {
 	case http.MethodGet:
-		confirmed := session.Values[SESSION_CONFIRMED].(bool)
-		fmt.Println("User email confirmed: ", confirmed)
-		if confirmed {
+		fmt.Println("User email confirmed: ", user.Verified)
+		if user.Verified {
 			http.Redirect(w, r, "/", http.StatusFound)
 		} else {
 			http.ServeFile(w, r, "./static/confirmation.html")
 		}
 	case http.MethodPost:
-	default:
+		code := r.FormValue("code")
+		if user.EmailCode == code {
+			http.Redirect(w, r, "/", http.StatusAccepted)
+		} else {
+			http.Redirect(w, r, "/confirm-email", http.StatusForbidden)
+		}
 	}
 }
 
