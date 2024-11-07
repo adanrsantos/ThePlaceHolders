@@ -21,10 +21,43 @@ html, body {
 }
 
 .navbarCont {
+    position: relative;
     background-color: var(--utsa-blue);
     width: 100%;
     text-align: center;
     margin-bottom: 10px;
+}
+
+.navbarCont a {
+    float: left;
+    text-align: center;
+    padding: 12px;
+    text-decoration: none;
+    color: #e67e22;
+}
+
+.navbarCont a.icon {
+    padding: 0px;
+}
+
+.navbarCont a.title {
+    font-size: 26.5px;
+}
+
+.navbarCont a.rightB {
+    float: right;
+    display: inline-block;
+    padding: 20px;
+    margin: 0;
+    color: #ecf0f1;
+}
+
+.navbarCont a.rightB:hover {
+    background-color: #34495e
+}
+
+.navbarCont img {
+    float: left;
 }
 
 .canvasCont {
@@ -74,3 +107,10 @@ canvas {
     margin: 20px;
     image-rendering: pixelated;
 }
+
+@media screen and (max-width: 600px) {
+    .navbarCont a {
+      /* possible hamburger menu for moblie users*/
+      position: absolute
+    }
+  }
