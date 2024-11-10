@@ -16,8 +16,8 @@ html, body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
     background-color: var(--utsa-orange);
+    height: 100vh;
 }
 
 .navbarCont {
@@ -25,7 +25,7 @@ html, body {
     background-color: var(--utsa-blue);
     width: 100%;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 10vh;
 }
 
 .navbarCont a {
@@ -33,7 +33,7 @@ html, body {
     text-align: center;
     padding: 12px;
     text-decoration: none;
-    color: #e67e22;
+    color: var(--utsa-orange);
 }
 
 .navbarCont a.icon {
@@ -46,7 +46,6 @@ html, body {
 
 .navbarCont a.rightB {
     float: right;
-    display: inline-block;
     padding: 20px;
     margin: 0;
     color: #ecf0f1;
@@ -77,7 +76,8 @@ html, body {
     border-top: solid black 1px;
     background-color: var(--utsa-blue);
     width: 100%;
-    height:auto;
+    height: auto;
+    margin-top: 11vh;
 }
 
 .toolbarItems {
@@ -105,12 +105,40 @@ html, body {
 canvas {
     background-color: white;
     margin: 20px;
+    align-self: center;
+    height: 500px;
+    width: 500px;
     image-rendering: pixelated;
 }
 
 @media screen and (max-width: 600px) {
+    .navbarCont a.title {
+        font-size: 18.5px;
+        padding-left: 0px;
+    }
+
+    .navbarCont img {
+        width: 80%;
+    }
+
+    .navbarCont {
+        position: relative;
+        background-color: var(--utsa-blue);
+        width: 100%;
+        text-align: center;
+        margin-bottom: 11vh;
+    }
+    
     .navbarCont a {
       /* possible hamburger menu for moblie users*/
-      position: absolute
+      font-size: 10px;
     }
+
+    canvas {
+        background-color: white;
+        margin: 20px;
+        align-self: center;
+        height: 500px;
+        width: 500px;
   }
+}

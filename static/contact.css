@@ -1,3 +1,7 @@
+:root {
+    --utsa-orange: #f15a22;
+    --utsa-blue: #0c2340;
+}
 body {
     margin: 0;
   }
