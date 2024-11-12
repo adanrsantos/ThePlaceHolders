@@ -21,16 +21,18 @@ html, body {
 }
 
 .navbarCont {
-    position: relative;
     background-color: var(--utsa-blue);
     width: 100%;
     text-align: center;
-    margin-bottom: 10vh;
+    position: fixed;
+    top: 0;
 }
 
 .navbarCont a {
+    display: flex;
+    flex-direction: row;
     float: left;
-    text-align: center;
+    justify-content: space-around;
     padding: 12px;
     text-decoration: none;
     color: var(--utsa-orange);
@@ -77,7 +79,8 @@ html, body {
     background-color: var(--utsa-blue);
     width: 100%;
     height: auto;
-    margin-top: 11vh;
+    position: fixed;
+    bottom: 0;
 }
 
 .toolbarItems {
@@ -122,11 +125,9 @@ canvas {
     }
 
     .navbarCont {
-        position: relative;
         background-color: var(--utsa-blue);
         width: 100%;
         text-align: center;
-        margin-bottom: 11vh;
     }
     
     .navbarCont a {
@@ -140,5 +141,9 @@ canvas {
         align-self: center;
         height: 500px;
         width: 500px;
-  }
+    }
+    
+    .toolbar {
+        font-size: 80%;
+    }
 }
