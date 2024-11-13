@@ -20,6 +20,7 @@ window.addEventListener("load", async (e) => {
     for (let x = 0; x < DATA_SIZE * DATA_SIZE * 4; x++) {
         image.data[x] = 255;
     }
+    ctx.imageSmoothingEnabled = false;
     // Create drawable image, update it every half second
     await redraw();
     setInterval(redraw, 500);
@@ -41,9 +42,8 @@ function setPixel(data, x, y, color) {
 
 function draw() {
     ctx.fillStyle = "rgb(0 0 0 255)";
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     let drawScale = CANVAS_SIZE / DATA_SIZE * scale;
-    ctx.imageSmoothingEnabled = false;
     ctx.scale(drawScale, drawScale);
     ctx.drawImage(bitmap, offx, offy);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -57,20 +57,24 @@ function mousePosition(e) {
     return {x: cx, y: cy};
 }
 
+function moveOffset(x, y) {
+    offx = Math.min(Math.max(x, -10 - DATA_SIZE / 2), DATA_SIZE + 10);
+    offy = Math.min(Math.max(y, -10 - DATA_SIZE / 2), DATA_SIZE + 10);
+}
+
 canvas.addEventListener("wheel", async (e) => {
     let mouse = mousePosition(e);
-    console.log(mouse);
     let oldScale = scale;
     if (e.deltaY < 0) {
         scale += 0.1;
     } else if (e.deltaY > 0) {
         scale -= 0.1;
     }
+    scale = Math.min(Math.max(scale, 0.5), 10);
     let diff = (CANVAS_SIZE / oldScale) - (CANVAS_SIZE / scale);
     let ratiox = (mouse.x - (CANVAS_SIZE / 2)) / CANVAS_SIZE;
     let ratioy = (mouse.y - (CANVAS_SIZE / 2)) / CANVAS_SIZE;
-    offx += diff * ratiox;
-    offy += diff * ratioy;
+    moveOffset(diff * ratiox, diff*  ratioy);
     draw(image);
 });
 
@@ -111,6 +115,10 @@ canvas.addEventListener("mousemove", async (e) => {
     if (e.buttons & 1) {
         offx += e.movementX * (1.0 / scale) * 0.45;
         offy += e.movementY * (1.0 / scale) * 0.45;
+        moveOffset(
+            offx + e.movementX * (1.0 / scale) * 0.45,
+            offy + e.movementY * (1.0 / scale) * 0.45
+        );
         draw(image);
     } 
 });
