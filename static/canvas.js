@@ -100,7 +100,7 @@ canvas.addEventListener("mouseup", async (e) => {
         if (cx < 0 || cx > CANVAS_SIZE || cy < 0 || cy > CANVAS_SIZE) {
             return;
         }
-        setPixel(image.data, cx, cy, [255, 0, 0, 255]);
+        setPixel(image.data, cx, cy, [0, 0, 255, 255]);
         await redraw();
         draw();
     }
