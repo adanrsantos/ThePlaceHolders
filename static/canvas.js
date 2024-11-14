@@ -121,6 +121,13 @@ function moveOffset(x, y) {
     offy = Math.min(Math.max(y, -10 - DATA_SIZE / 2), DATA_SIZE + 10);
 }
 
+function changeColor() {
+    var button = document.getElementById("colorPicker");
+    var style = getComputedStyle(button);
+  
+    console.log(style['background-color']);
+}
+
 canvas.addEventListener("wheel", async (e) => {
     let mouse = mousePosition(e);
     let oldScale = scale;
@@ -163,7 +170,7 @@ canvas.addEventListener("mouseup", async (e) => {
         if (cx < 0 || cx > CANVAS_SIZE || cy < 0 || cy > CANVAS_SIZE) {
             return;
         }
-        setPixel(image.data, cx, cy, [0, 0, 255, 255]);
+        setPixel(image.data, cx, cy, pixelColor);
         await redraw();
         draw();
     }

@@ -22,54 +22,91 @@
       <!--note to self: below IS the canvas-->
       <!--<div class="canvasCont">-->
         <canvas id="canvas" width="500" height="500" style="border:1px solid #000000;" alt="canvas"></canvas>
+        <div id="toolbar" class="d-flex align-items-center toolbar">
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(255, 255, 255);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(0, 0, 0);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(128,128,128);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(128,0,0);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(128,128,0);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(0,128,0);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(0,128,128);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(0,0,128);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(128,0,128);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(128,128,64);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(0,64,64);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(0,128,255);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(64,0,255);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(128,64,0);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(192,192,192);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(255,0,0);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(255,255,0);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(0,255,0);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(0,255,255);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(0,0,247);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(255,0,255);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(255,255,128);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(0,255,128);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(128,255,255);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(128,128,255);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(255,0,128);" type="button" onclick="changeColor()"></button>
+          </div>
+          <div class="toolbarItems">
+            <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(255,128,64);" type="button" onclick="changeColor()"></button>
+          </div>
+        </div>
       <!--</div>-->
         <!--note to self: above IS the canvas-->
-    </div>
-    <div id="toolbar" class="d-flex toolbar flex-wrap">
-      <div class="toolbarItems">
-        <label for="stroke">Strokes</label>
-        <input id="stroke" name="stroke" type="color" class="strokePicker">
-      </div>
-      <div class="toolbarItems">
-        <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(255, 255, 255);" type="button"></button>
-      </div>
-      <div class="toolbarItems">
-        <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(0, 0, 0);" type="button"></button>
-      </div>
-      <div class="toolbarItems">
-        <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(128,128,128);" type="button"></button>
-      </div>
-      <div class="toolbarItems">
-        <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(128,0,0);" type="button"></button>
-      </div>
-      <div class="toolbarItems">
-        <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(128,128,0);" type="button"></button>
-      </div>
-      <div class="toolbarItems">
-        <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(0,128,0);" type="button"></button>
-      </div>
-      <div class="toolbarItems">
-        <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(0,128,128);" type="button"></button>
-      </div>
-      <div class="toolbarItems">
-        <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(0,0,128);" type="button"></button>
-      </div>
-      <div class="toolbarItems">
-        <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(128,0,128);" type="button"></button>
-      </div>
-      <div class="toolbarItems">
-        <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(128,128,64);" type="button"></button>
-      </div>
-      <div class="toolbarItems">
-        <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(128,128,64);" type="button"></button>
-      </div>
-      <div class="toolbarItems">
-        <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(128,128,64);" type="button"></button>
-      </div>
-      <!--<div class="toolbarItems">
-        <label for="stroke">Strokes</label>
-        <input id="stroke" name="stroke" type="color" class="strokePicker">
-      </div>-->
     </div>
     <script src="./canvas.js"></script>   
   </body>
