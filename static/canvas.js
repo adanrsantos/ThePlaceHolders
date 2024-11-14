@@ -16,6 +16,63 @@ let image = new ImageData(DATA_SIZE, DATA_SIZE);
 // Drawable image
 let bitmap = null;
 
+async function sendPixelData(x, y, color) {
+    try {
+        const response = await fetch("http://localhost:8080/savePixel", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ x: x, y: y, color: color })
+        });
+        
+        if (response.ok) {
+            const updatedPixels = await response.json();
+            // Refresh the canvas with updated pixel data
+            updateCanvasWithData(updatedPixels);
+        } else {
+            console.error("Failed to send pixel data:", response.statusText);
+        }
+    } catch (error) {
+        console.error("Error sending pixel data:", error);
+    }
+}
+
+function updateCanvasWithData(pixelDataArray) {
+    // Clear the canvas image data
+    for (let x = 0; x < DATA_SIZE * DATA_SIZE * 4; x++) {
+        image.data[x] = 255; // Reset to white
+    }
+    
+    // Set each pixel from the server data
+    pixelDataArray.forEach(pixel => {
+        setPixel(image.data, pixel.x, pixel.y, pixel.color);
+    });
+    
+    // Redraw and update canvas
+    redraw();
+    draw();
+}
+
+canvas.addEventListener("mouseup", async (e) => {
+    if (e.button == 0 && mouseClicked) {
+        mouseClicked = false;
+        let mouse = mousePosition(e);
+        let cx = mouse.x;
+        let cy = mouse.y;
+        
+        if (cx < 0 || cx > CANVAS_SIZE || cy < 0 || cy > CANVAS_SIZE) {
+            return;
+        }
+        
+        const color = [0, 0, 255, 255];
+        setPixel(image.data, cx, cy, color);
+        
+        // Send pixel data to the server
+        await sendPixelData(cx, cy, color);
+    }
+});
+
 window.addEventListener("load", async (e) => {
     for (let x = 0; x < DATA_SIZE * DATA_SIZE * 4; x++) {
         image.data[x] = 255;
@@ -29,7 +86,9 @@ window.addEventListener("load", async (e) => {
 
 
 async function redraw() {
+    // Create a new ImageBitmap based on the updated image data
     bitmap = await createImageBitmap(image);
+    console.log("Redrawing canvas...");
 }
 
 // Color is an array of four numbers 0-255 (RGB + transparency)

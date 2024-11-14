@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
 	"github.com/gorilla/sessions"
 )
 
@@ -19,6 +18,25 @@ type Server struct {
 	Sessions *sessions.CookieStore
 }
 
+// Enable CORS for specific routes
+func enableCORS(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Set the CORS headers to allow requests from your frontend
+		w.Header().Set("Access-Control-Allow-Origin", "http://127.0.0.1:8080") // Adjust if your frontend is on a different port
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		// Handle preflight OPTIONS request
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		// Process the actual request
+		next.ServeHTTP(w, r)
+	})
+}
+
 func main() {
 	// Grab command line arguments
 	ipFlag := flag.String("ip", "127.0.0.1", "IP address to receive traffic from")
@@ -26,6 +44,7 @@ func main() {
 	flag.Parse()
 	address := *ipFlag
 	port := *portFlag
+
 	// Create server object
 	secret := []byte("super-secret-key")
 	server := Server{
@@ -48,6 +67,10 @@ func main() {
 	})
 	http.HandleFunc("/secret", server.secret)
 	http.HandleFunc("/confirm-email", server.handle_confirmation)
+
+	// Apply CORS middleware to /savePixel handler
+	http.Handle("/savePixel", enableCORS(http.HandlerFunc(savePixelHandler)))
+
 	// Start web server at 127.0.0.1:8080
 	fmt.Printf("Listening to %s on port %s...\n", address, port)
 	err := http.ListenAndServe(address+":"+port, nil)
