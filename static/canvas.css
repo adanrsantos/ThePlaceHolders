@@ -86,21 +86,26 @@ html, body {
     bottom: 0;
 }
 
-.toolbarItems {
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    font-weight: 900;
+
+.toolbarItems label, input {
+    float: left;
+    padding: 8px;
+    font-size: 14px;
     color: white;
-    text-align: center;
-    height: 20px;
-    width: 20px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif; 
 }
 
-.strokePicker {
+.toolbarItems button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    float: right;
+    padding: 16px;
+}
+
+.strokePicker{
+    margin: 2px;
     padding: 0;
-    margin: 0;
-    width: 100%;
 }
 
 .strokePicker:hover {
@@ -149,4 +154,32 @@ canvas {
     .toolbar {
         font-size: 80%;
     }
+
+    .toolbarItems label, input {
+        float: left;
+        padding: 4px;
+        font-size: 7.5px;
+        color: white;
+        font-family: Verdana, Geneva, Tahoma, sans-serif; 
+    }
+    
+    .toolbarItems button {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        float: right;
+        padding: 8px;
+        padding-left: 24px;
+    }
+
+    .strokePicker{
+        margin: 2px;
+        height: 16px;
+        width: 60px;
+    }
+    
+    .strokePicker:hover {
+        cursor: pointer;
+    }
+    
 }

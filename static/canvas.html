@@ -22,22 +22,14 @@
       <!--note to self: below IS the canvas-->
       <!--<div class="canvasCont">-->
         <canvas id="canvas" width="500" height="500" style="border:1px solid #000000;" alt="canvas"></canvas>
-        <div id="toolbar" class="d-flex align-items-center toolbar">
-          <div class="toolbarItems">
-            <!--extra space for toolbar-->
-          </div>
-          <div class="toolbarItems">
-            <label for="stroke">Strokes</label>
-            <input id="stroke" name="stroke" type="color" class="strokePicker">
-          </div>
-          <div class="toolbarItems">
-            <!--extra space for toolbar-->
-          </div>
-        </div>
       <!--</div>-->
         <!--note to self: above IS the canvas-->
     </div>
     <div id="toolbar" class="d-flex toolbar flex-wrap">
+      <div class="toolbarItems">
+        <label for="stroke">Strokes</label>
+        <input id="stroke" name="stroke" type="color" class="strokePicker">
+      </div>
       <div class="toolbarItems">
         <button id="colorPicker" style="height:20px; width:20px; background-color:rgb(255, 255, 255);" type="button"></button>
       </div>
